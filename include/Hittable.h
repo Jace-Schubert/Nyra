@@ -1,15 +1,21 @@
 #pragma once
 
-#include <Ray.h>
+#include <memory>
 #include <optional>
+
+#include <AABB.h>
+#include <Ray.h>
 #include <Interval.h>
 
 namespace Nyra
 {
+    class Material;
+
     struct HitRecord
     {
         raymath::point3 hitPoint;
         raymath::vec3 surfaceNormal;
+        std::shared_ptr<Material> material;
         double t;
         bool frontFace;
 
@@ -28,5 +34,7 @@ namespace Nyra
         virtual ~Hittable() = default;
 
         virtual std::optional<HitRecord> Hit(const Nyra::Ray& ray, Interval interval) const = 0;
+
+        virtual AABB GetBoundingBox() const = 0;
     };
 }

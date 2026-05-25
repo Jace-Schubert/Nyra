@@ -1,35 +1,46 @@
-#pragma once
-
 #include <Ray.h>
 
-namespace Nyra
+using namespace Nyra;
+
+Ray::Ray(const raymath::point3& origin, const raymath::vec3& direction, double time)
+    : m_origin(origin), m_dir(direction), m_time(time)
 {
-    Ray::Ray(const raymath::point3& origin, const raymath::vec3& direction)
-        : m_origin(origin), m_dir(direction)
-    {
-    }
+}
 
-    raymath::vec3 Ray::At(double t) const
-    {
-        return m_origin + (t * m_dir);
-    }
+Ray::Ray(const raymath::point3& origin, const raymath::vec3& direction)
+    : m_origin(origin), m_dir(direction), m_time(0)
+{
+}
 
-    // Getters & Setters
-    const raymath::point3& Ray::GetOrigin() const
-    {
-        return m_origin;
-    }
-    void Ray::SetOrigin(const raymath::point3& origin)
-    {
-        m_origin = origin;
-    }
+raymath::vec3 Ray::At(double t) const
+{
+    return m_origin + (t * m_dir);
+}
 
-    const raymath::vec3& Ray::GetDirection() const
-    {
-        return m_dir;
-    }
-    void Ray::SetDirection(const raymath::vec3& direction)
-    {
-        m_dir = direction;
-    }
+// Getters & Setters
+const raymath::point3& Ray::GetOrigin() const
+{
+    return m_origin;
+}
+void Ray::SetOrigin(const raymath::point3& origin)
+{
+    m_origin = origin;
+}
+
+const raymath::vec3& Ray::GetDirection() const
+{
+    return m_dir;
+}
+void Ray::SetDirection(const raymath::vec3& direction)
+{
+    m_dir = direction;
+}
+
+double Ray::GetTime() const
+{
+    return m_time;
+}
+void Ray::SetTime(double time)
+{    
+    m_time = time;
 }

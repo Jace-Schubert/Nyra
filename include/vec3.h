@@ -12,6 +12,7 @@ namespace raymath
 
         double length() const { return std::sqrt(x*x + y*y + z*z); }
         double length_squared() const { return x*x + y*y + z*z; }
+        bool near_zero() const { return (std::fabs(x) < 1e-8) && (std::fabs(y) < 1e-8) && (std::fabs(z) < 1e-8); }
 
         // Operators
         vec3 operator-() const { return vec3(-x, -y, -z); }
@@ -74,4 +75,9 @@ namespace raymath
     }
 
     inline vec3 unitize(const vec3& v) { return v / v.length(); }
+
+    inline vec3 reflect(const vec3& v, const vec3& n)
+    {
+        return v - (2 * dot(v, n) * n);
+    }
 }

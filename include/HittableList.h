@@ -10,14 +10,20 @@ namespace Nyra
     {
     public:
         HittableList();
+        HittableList(std::shared_ptr<Hittable> hittable);
         ~HittableList();
 
+        // Hittable overrides
         std::optional<HitRecord> Hit(const Nyra::Ray& ray, Interval interval) const override;
+        AABB GetBoundingBox() const override;
 
-        void PushBack(std::shared_ptr<Hittable> hittable);
+        void Add(std::shared_ptr<Hittable> hittable);
         void Clear();
+
+        std::vector<std::shared_ptr<Hittable>>& GetObjects();
 
     private:
         std::vector<std::shared_ptr<Hittable>> m_hittables;
+        AABB m_boundingBox;
     };
 }
