@@ -5,23 +5,23 @@ namespace Nyra
     class Interval 
     {
     public:
-        Interval(double min, double max);
+        Interval(float min, float max);
 
         // Constructs an interval that encompasses both input intervals
         Interval(Interval lhs, Interval rhs);
         
         ~Interval();
 
-        bool Contains(double value) const;
-        bool Surrounds(double value) const;
-        double Clamp(double value) const;
-        void Expand(double delta);
+        bool Contains(float value) const;
+        bool Surrounds(float value) const;
+        float Clamp(float value) const;
+        void Expand(float delta);
 
-        double GetMin() const;
-        double GetMax() const;
+        float GetMin() const;
+        float GetMax() const;
 
     private:
-        double m_min;
-        double m_max;
+        float m_min;
+        float m_max;
     };
 }

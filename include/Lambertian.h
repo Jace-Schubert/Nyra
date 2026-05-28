@@ -1,14 +1,15 @@
 #pragma once
 
 #include <Material.h>
+
 namespace Nyra
 {
     class Lambertian : public Material
     {
     public:
-        Lambertian(const raymath::color& albedo);
+        Lambertian(glm::vec3 albedo);
         ~Lambertian();
 
-        std::pair<raymath::color, std::optional<Nyra::Ray>> Scatter(const Nyra::Ray& ray, const Nyra::HitRecord& hitRecord) const override;
+        std::pair<glm::vec3, std::optional<Ray>> Scatter(const Ray& ray, const HitRecord& hitRecord) const override;
     };
 }

@@ -7,14 +7,14 @@ namespace Nyra
     class Dielectric : public Material
     {
     public:
-        Dielectric(double refractiveIndex);
+        Dielectric(float refractiveIndex);
         ~Dielectric();
 
-        std::pair<raymath::color, std::optional<Nyra::Ray>> Scatter(const Nyra::Ray& ray, const Nyra::HitRecord& hitRecord) const override;
+        std::pair<glm::vec3, std::optional<Ray>> Scatter(const Ray& ray, const HitRecord& hitRecord) const override;
 
     private:
-        double m_refractiveIndex;
+        float m_refractiveIndex;
 
-        double CalculateReflectance(double cosTheta, double refractiveIndex) const;
+        float CalculateReflectance(float cosTheta, float refractiveIndex) const;
     };
 }

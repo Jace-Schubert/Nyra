@@ -1,3 +1,4 @@
+#include <NyraPCH.h>
 #include <AABB.h>
 
 using namespace Nyra;
@@ -7,7 +8,7 @@ AABB::AABB(Interval xInterval, Interval yInterval, Interval zInterval)
 {
 }
 
-AABB::AABB(const raymath::point3& point1, const raymath::point3& point2)
+AABB::AABB(glm::vec3 point1, glm::vec3 point2)
     : m_intervals({Interval(std::fmin(point1.x, point2.x), std::fmax(point1.x, point2.x)),
                    Interval(std::fmin(point1.y, point2.y), std::fmax(point1.y, point2.y)),
                    Interval(std::fmin(point1.z, point2.z), std::fmax(point1.z, point2.z))})
@@ -30,9 +31,9 @@ bool AABB::Hit(const Ray& ray, Interval interval) const
     // Check if ray hits all 3 axes
     for (int i = 0; i < 3; i++)
     {
-        double inverseDirection = 1.0 / ray.GetDirection()[i];
-        double t0 = (m_intervals[i].GetMin() - ray.GetOrigin()[i]) * inverseDirection;
-        double t1 = (m_intervals[i].GetMax() - ray.GetOrigin()[i]) * inverseDirection;
+        float inverseDirection = 1.0 / ray.GetDirection()[i];
+        float t0 = (m_intervals[i].GetMin() - ray.GetOrigin()[i]) * inverseDirection;
+        float t1 = (m_intervals[i].GetMax() - ray.GetOrigin()[i]) * inverseDirection;
 
         if (inverseDirection < 0.0)
         {
@@ -52,9 +53,9 @@ bool AABB::Hit(const Ray& ray, Interval interval) const
 
 int AABB::ComputeLongestAxis() const
 {
-    double xLength = m_intervals[0].GetMax() - m_intervals[0].GetMin();
-    double yLength = m_intervals[1].GetMax() - m_intervals[1].GetMin();
-    double zLength = m_intervals[2].GetMax() - m_intervals[2].GetMin();
+    float xLength = m_intervals[0].GetMax() - m_intervals[0].GetMin();
+    float yLength = m_intervals[1].GetMax() - m_intervals[1].GetMin();
+    float zLength = m_intervals[2].GetMax() - m_intervals[2].GetMin();
 
     if (xLength > yLength && xLength > zLength)
     {

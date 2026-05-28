@@ -1,7 +1,7 @@
 #pragma once
 
-#include <utility>
-#include <vec3.h>
+#include <NyraPCH.h>
+
 #include <Ray.h>
 #include <Hittable.h>
 
@@ -12,11 +12,11 @@ namespace Nyra
     public:
         virtual ~Material() = default;
 
-        virtual std::pair<raymath::color, std::optional<Nyra::Ray>> Scatter(const Nyra::Ray& ray, const Nyra::HitRecord& hitRecord) const = 0;
+        virtual std::pair<glm::vec3, std::optional<Ray>> Scatter(const Ray& ray, const HitRecord& hitRecord) const = 0;
 
     protected:
-        Material(const raymath::color& albedo) : m_albedo(albedo) {}
+        Material(glm::vec3 albedo) : m_albedo(albedo) {}
 
-        raymath::color m_albedo;
+        glm::vec3 m_albedo;
     };
 }

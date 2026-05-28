@@ -1,4 +1,5 @@
-#include "HittableList.h"
+#include <NyraPCH.h>
+#include <HittableList.h>
 
 using namespace Nyra;
 
@@ -19,7 +20,7 @@ HittableList::~HittableList()
 std::optional<HitRecord> HittableList::Hit(const Nyra::Ray& ray, Interval interval) const
 {
     std::optional<HitRecord> closestHit;
-    double closestT = interval.GetMax();
+    float closestT = interval.GetMax();
 
     for (const std::shared_ptr<Hittable>& hittable : m_hittables)
     {

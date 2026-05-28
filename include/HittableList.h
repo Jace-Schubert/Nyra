@@ -14,7 +14,7 @@ namespace Nyra
         ~HittableList();
 
         // Hittable overrides
-        std::optional<HitRecord> Hit(const Nyra::Ray& ray, Interval interval) const override;
+        std::optional<HitRecord> Hit(const Ray& ray, Interval interval) const override;
         AABB GetBoundingBox() const override;
 
         void Add(std::shared_ptr<Hittable> hittable);

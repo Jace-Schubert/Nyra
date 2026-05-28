@@ -1,6 +1,5 @@
+#include <NyraPCH.h>
 #include <BVHNode.h>
-
-#include <algorithm>
 
 #include <Random.h>
 
@@ -12,17 +11,16 @@ BVHNode::BVHNode(HittableList hittables)
 }
 
 BVHNode::BVHNode(std::vector<std::shared_ptr<Hittable>>& hittables, size_t start, size_t end)
-    : m_left(nullptr), m_right(nullptr), m_boundingBox(Interval(0, 0), Interval(0, 0), Interval(0, 0))
+    : m_left(nullptr), m_right(nullptr), m_boundingBox(hittables[start]->GetBoundingBox())
 {
     // Initialize bounding box for this node to encompass all hittables in the range
-    for (size_t i = start; i < end; i++)
+    for (size_t i = start + 1; i < end; i++)
     {
         m_boundingBox = AABB(m_boundingBox, hittables[i]->GetBoundingBox());
     }
 
     // Use longest axis for best division of space
     int axis = m_boundingBox.ComputeLongestAxis();
-    //int axis = Random::GenerateInt(0, 2);
 
     // Lambda for comparing two hittables based on their bounding box's minimum value along the selected axis
     auto comparator = [axis](const std::shared_ptr<Hittable> lhs, const std::shared_ptr<Hittable> rhs)
@@ -47,10 +45,6 @@ BVHNode::BVHNode(std::vector<std::shared_ptr<Hittable>>& hittables, size_t start
         m_left = std::make_shared<BVHNode>(hittables, start, middle);
         m_right = std::make_shared<BVHNode>(hittables, middle, end);
     }
-
-    // AABB leftBox = m_left->GetBoundingBox();
-    // AABB rightBox = m_right->GetBoundingBox();
-    // m_boundingBox = AABB(leftBox, rightBox);
 }
 
 BVHNode::~BVHNode()

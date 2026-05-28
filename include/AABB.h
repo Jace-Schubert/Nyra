@@ -1,10 +1,9 @@
 #pragma once
 
-#include <array>
+#include <NyraPCH.h>
 
 #include <Interval.h>
 #include <Ray.h>
-#include <vec3.h>
 
 namespace Nyra
 {
@@ -12,12 +11,12 @@ namespace Nyra
     {
     public:
         AABB(Interval xInterval, Interval yInterval, Interval zInterval);
-        AABB(const raymath::point3& point1, const raymath::point3& point2);
+        AABB(glm::vec3 point1, glm::vec3 point2);
         AABB(const AABB& lhs, const AABB& rhs);
         ~AABB();
 
         bool Hit(const Ray& ray, Interval interval) const;
-        
+
         // returns the index of the longest axis of the bounding box (0 = x, 1 = y, 2 = z)
         int ComputeLongestAxis() const;
 

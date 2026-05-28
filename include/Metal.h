@@ -7,12 +7,12 @@ namespace Nyra
     class Metal : public Material
     {
     public:
-        Metal(const raymath::color& albedo, double fuzz);
+        Metal(glm::vec3 albedo, float fuzz);
         ~Metal();
 
-        std::pair<raymath::color, std::optional<Nyra::Ray>> Scatter(const Nyra::Ray& ray, const Nyra::HitRecord& hitRecord) const override;
+        std::pair<glm::vec3, std::optional<Ray>> Scatter(const Ray& ray, const HitRecord& hitRecord) const override;
 
     private:
-        double m_fuzz;
+        float m_fuzz;
     };
 }

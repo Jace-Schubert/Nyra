@@ -1,10 +1,9 @@
+#include <NyraPCH.h>
 #include <Interval.h>
-
-#include <cmath>
 
 using namespace Nyra;
 
-Interval::Interval(double min, double max)
+Interval::Interval(float min, float max)
     : m_min(min), m_max(max)
 {
 }  
@@ -18,17 +17,17 @@ Interval::~Interval()
 {
 }
 
-bool Interval::Contains(double value) const
+bool Interval::Contains(float value) const
 {
     return value >= m_min && value <= m_max;
 }
 
-bool Interval::Surrounds(double value) const
+bool Interval::Surrounds(float value) const
 {
     return value > m_min && value < m_max;
 }
 
-double Interval::Clamp(double value) const
+float Interval::Clamp(float value) const
 {
     if (value < m_min)
     {
@@ -43,18 +42,18 @@ double Interval::Clamp(double value) const
     return value;
 }
 
-void Interval::Expand(double delta)
+void Interval::Expand(float delta)
 {
     m_min -= delta / 2;
     m_max += delta / 2;
 }
 
-double Interval::GetMin() const
+float Interval::GetMin() const
 {
     return m_min;
 }
 
-double Interval::GetMax() const
+float Interval::GetMax() const
 {
     return m_max;
 }

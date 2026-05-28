@@ -2,34 +2,34 @@
 
 #include <random>
 
-#include <vec3.h>
+#include <Math.h>
 
 namespace Nyra::Random
 {
-    inline double GenerateDouble(double min, double max)
+    inline float GenerateFloat(float min, float max)
     {
         thread_local static std::mt19937 generator(std::random_device{}());
-        thread_local static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+        thread_local static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
         
         return distribution(generator) * (max - min) + min;
     }
 
     inline int GenerateInt(int min, int max)
     {
-        return static_cast<int>(GenerateDouble(min, max + 1));
+        return static_cast<int>(GenerateFloat(min, max + 1));
     }
 
-    inline raymath::vec3 GenerateVector3(double min, double max)
+    inline glm::vec3 GenerateVec3(float min, float max)
     {
-        return raymath::vec3(GenerateDouble(min, max), GenerateDouble(min, max), GenerateDouble(min, max));
+        return glm::vec3(GenerateFloat(min, max), GenerateFloat(min, max), GenerateFloat(min, max));
     }
 
-    inline raymath::vec3 GenerateUnitVector()
+    inline glm::vec3 GenerateUnitVec()
     {
         while (true)
         {
-            raymath::vec3 vec = GenerateVector3(-1, 1);
-            double lSquared = vec.length_squared();
+            glm::vec3 vec = GenerateVec3(-1, 1);
+            float lSquared = Math::LengthSquared(vec);
             if (1e-160 < lSquared && lSquared <= 1)
             {
                 return vec / std::sqrt(lSquared);
@@ -37,12 +37,12 @@ namespace Nyra::Random
         }
     }
 
-    inline raymath::vec3 GenerateVectorInUnitDisk()
+    inline glm::vec3 GenerateVecInUnitDisk()
     {
         while (true)
         {
-            raymath::vec3 vec = raymath::vec3(GenerateDouble(-1, 1), GenerateDouble(-1, 1), 0);
-            if (vec.length_squared() < 1)
+            glm::vec3 vec = glm::vec3(GenerateFloat(-1, 1), GenerateFloat(-1, 1), 0);
+            if (Math::LengthSquared(vec) < 1)
             {
                 return vec;
             }

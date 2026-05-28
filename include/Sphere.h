@@ -1,27 +1,26 @@
 #pragma once
 
 #include <Hittable.h>
-#include <vec3.h>
 
 namespace Nyra
 {
     class Sphere : public Hittable
     {
     public:
-        Sphere(const raymath::point3& center, double radius, std::shared_ptr<Material> material);
-        Sphere(const raymath::point3& center1, const raymath::point3& center2, double radius, std::shared_ptr<Material> material);
+        Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material);
+        Sphere(glm::vec3 center1, glm::vec3 center2, float radius, std::shared_ptr<Material> material);
         ~Sphere();
 
         // Hittable overrides
-        virtual std::optional<HitRecord> Hit(const Nyra::Ray& ray, Interval interval) const override;
+        virtual std::optional<HitRecord> Hit(const Ray& ray, Interval interval) const override;
         virtual AABB GetBoundingBox() const override;
 
         // Setters & Getters
         const Ray& GetCenter() const;
         void SetCenter(const Ray& center);
 
-        double GetRadius() const;
-        void SetRadius(double radius);
+        float GetRadius() const;
+        void SetRadius(float radius);
 
         const std::shared_ptr<Material>& GetMaterial() const;
         void SetMaterial(std::shared_ptr<Material> material);
@@ -30,6 +29,6 @@ namespace Nyra
         AABB m_boundingBox;
         Ray m_center;
         std::shared_ptr<Material> m_material;
-        double m_radius;
+        float m_radius;
     };
 }

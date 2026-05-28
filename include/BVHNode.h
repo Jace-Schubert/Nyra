@@ -11,7 +11,7 @@ namespace Nyra
         ~BVHNode();
 
         // Hittable overrides
-        std::optional<HitRecord> Hit(const Nyra::Ray& ray, Interval interval) const override;
+        std::optional<HitRecord> Hit(const Ray& ray, Interval interval) const override;
         AABB GetBoundingBox() const override;
 
     private:

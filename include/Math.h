@@ -1,19 +1,8 @@
 #pragma once
 
-#include <vec3.h>
-
 namespace Nyra::Math
 {
-    inline raymath::vec3 Refract(const raymath::vec3& uv, const raymath::vec3& normal, double etaRatio)
-    {
-        double cosTheta = std::fmin(raymath::dot(-uv, normal), 1.0);
-        raymath::vec3 rOutPerp = etaRatio * (uv + cosTheta * normal);
-        raymath::vec3 rOutParallel = -std::sqrt(std::fabs(1.0 - rOutPerp.length_squared())) * normal;
-        return rOutPerp + rOutParallel;
-    }
-
-    constexpr inline double radians(double degrees)
-    {
-        return degrees * M_PI / 180.0;
-    }
+    inline bool NearZero(glm::vec3 v) { return (std::fabs(v.x) < 1e-8) && (std::fabs(v.y) < 1e-8) && (std::fabs(v.z) < 1e-8); }
+    
+    inline float LengthSquared(glm::vec3 v) { return glm::dot(v, v); }
 }

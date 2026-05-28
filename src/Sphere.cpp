@@ -1,29 +1,34 @@
+#include <NyraPCH.h>
 #include <Sphere.h>
+
+#include <Math.h>
 
 using namespace Nyra;
 
 namespace
 {
     // Initialization helpers
-    AABB ComputeBoundingBox(raymath::point3 center, double radius)
+    AABB ComputeBoundingBox(glm::vec3 center, float radius)
     {
-        raymath::vec3 radiusVec(radius, radius, radius);
+        glm::vec3 radiusVec(radius, radius, radius);
         return AABB(center - radiusVec, center + radiusVec);
     }
 
-    AABB ComputeBoundingBox(raymath::point3 centerAtStart, raymath::point3 centerAtEnd, double radius)
+    AABB ComputeBoundingBox(glm::vec3 centerAtStart, glm::vec3 centerAtEnd, float radius)
     {
-        raymath::vec3 radiusVec(radius, radius, radius);
-        return AABB(centerAtStart - radiusVec, centerAtEnd + radiusVec);
+        glm::vec3 radiusVec(radius, radius, radius);
+        AABB boxAtStart(centerAtStart - radiusVec, centerAtStart + radiusVec);
+        AABB boxAtEnd(centerAtEnd - radiusVec, centerAtEnd + radiusVec);
+        return AABB(boxAtStart, boxAtEnd);
     }
 }
 
-Sphere::Sphere(const raymath::point3& center, double radius, std::shared_ptr<Material> material)
-    : m_boundingBox(ComputeBoundingBox(center, radius)), m_center(center, raymath::vec3(0, 0, 0)), m_radius(radius), m_material(std::move(material))
+Sphere::Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material)
+    : m_boundingBox(ComputeBoundingBox(center, radius)), m_center(center, glm::vec3(0, 0, 0)), m_radius(radius), m_material(std::move(material))
 {
 }
 
-Sphere::Sphere(const raymath::point3& center1, const raymath::point3& center2, double radius, std::shared_ptr<Material> material)
+Sphere::Sphere(glm::vec3 center1, glm::vec3 center2, float radius, std::shared_ptr<Material> material)
     : m_boundingBox(ComputeBoundingBox(center1, center2, radius)), m_center(center1, center2 - center1), m_radius(radius), m_material(std::move(material))
 {
 }
@@ -34,12 +39,12 @@ Sphere::~Sphere()
 
 std::optional<HitRecord> Sphere::Hit(const Nyra::Ray& ray, Interval interval) const
 {
-    raymath::point3 currentCenter = m_center.At(ray.GetTime());
-    raymath::vec3 oc = currentCenter - ray.GetOrigin();
-    double a = ray.GetDirection().length_squared();
-    double h = raymath::dot(ray.GetDirection(), oc);
-    double c = oc.length_squared() - m_radius*m_radius;
-    double discriminant = h*h - a*c;
+    glm::vec3 currentCenter = m_center.At(ray.GetTime());
+    glm::vec3 oc = currentCenter - ray.GetOrigin();
+    float a = Math::LengthSquared(ray.GetDirection());
+    float h = glm::dot(ray.GetDirection(), oc);
+    float c = Math::LengthSquared(oc) - (m_radius * m_radius);
+    float discriminant = h*h - a*c;
     if (discriminant < 0)
     {
         // Miss
@@ -47,7 +52,7 @@ std::optional<HitRecord> Sphere::Hit(const Nyra::Ray& ray, Interval interval) co
     }
 
     // Find the nearest root that lies in the acceptable range
-    double root = (h - std::sqrt(discriminant)) / a;
+    float root = (h - std::sqrt(discriminant)) / a;
     if (!interval.Surrounds(root))
     {
         root = (h + std::sqrt(discriminant)) / a;
@@ -81,11 +86,11 @@ void Sphere::SetCenter(const Ray& center)
     m_center = center;
 }
 
-double Sphere::GetRadius() const
+float Sphere::GetRadius() const
 {
     return m_radius;
 }
-void Sphere::SetRadius(double radius)
+void Sphere::SetRadius(float radius)
 {
     m_radius = radius;
 }

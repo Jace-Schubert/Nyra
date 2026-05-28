@@ -1,9 +1,11 @@
+#include <NyraPCH.h>
 #include <Metal.h>
+
 #include <Random.h>
 
 using namespace Nyra;
 
-Metal::Metal(const raymath::color& albedo, double fuzz)
+Metal::Metal(glm::vec3 albedo, float fuzz)
     : Material(albedo), m_fuzz(fuzz)
 {
 }
@@ -12,18 +14,18 @@ Metal::~Metal()
 {
 }
 
-std::pair<raymath::color, std::optional<Ray>> Metal::Scatter(const Ray& ray, const HitRecord& hitRecord) const
+std::pair<glm::vec3, std::optional<Ray>> Metal::Scatter(const Ray& ray, const HitRecord& hitRecord) const
 {
     // Reflect ray in direction of perfect reflection from hit point
-    raymath::vec3 reflectedDir = raymath::reflect(ray.GetDirection(), hitRecord.surfaceNormal);
+    glm::vec3 reflectedDir = glm::reflect(ray.GetDirection(), hitRecord.surfaceNormal);
 
     // Add fuzziness to reflected ray
-    reflectedDir = raymath::unitize(reflectedDir) + m_fuzz * Random::GenerateUnitVector();
+    reflectedDir = glm::normalize(reflectedDir) + m_fuzz * Random::GenerateUnitVec();
     
-    if (raymath::dot(reflectedDir, hitRecord.surfaceNormal) <= 0)
+    if (glm::dot(reflectedDir, hitRecord.surfaceNormal) <= 0)
     {
         // Reflected ray is below the surface, so ignore it
-        return std::make_pair(raymath::color(0, 0, 0), std::nullopt);
+        return std::make_pair(glm::vec3(0, 0, 0), std::nullopt);
     }
 
     Ray reflectedRay(hitRecord.hitPoint, reflectedDir, ray.GetTime());

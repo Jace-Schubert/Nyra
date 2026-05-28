@@ -1,29 +1,29 @@
 #pragma once
 
-#include <vec3.h>
+#include <NyraPCH.h>
 
 namespace Nyra
 {
     class Ray
     {
     public:
-        Ray(const raymath::point3& origin, const raymath::vec3& direction, double time);
-        Ray(const raymath::point3& origin, const raymath::vec3& direction);
+        Ray(glm::vec3 origin, glm::vec3 direction, float time);
+        Ray(glm::vec3 origin, glm::vec3 direction);
 
-        raymath::vec3 At(double t) const;
+        glm::vec3 At(float t) const;
 
-        const raymath::point3& GetOrigin() const;
-        void SetOrigin(const raymath::point3& origin);
+        glm::vec3 GetOrigin() const;
+        void SetOrigin(glm::vec3 origin);
 
-        const raymath::vec3& GetDirection() const;
-        void SetDirection(const raymath::vec3& direction);
+        glm::vec3 GetDirection() const;
+        void SetDirection(glm::vec3 direction);
         
-        double GetTime() const;
-        void SetTime(double time);
+        float GetTime() const;
+        void SetTime(float time);
 
     private:
-        raymath::point3 m_origin;
-        raymath::vec3 m_dir;
-        double m_time;
+        glm::vec3 m_origin;
+        glm::vec3 m_dir;
+        float m_time;
     };
 }
