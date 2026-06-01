@@ -21,15 +21,30 @@ namespace
         AABB boxAtEnd(centerAtEnd - radiusVec, centerAtEnd + radiusVec);
         return AABB(boxAtStart, boxAtEnd);
     }
+
+    std::array<float, 2> MapPointToTextureCoordinates(glm::vec3 point)
+    {
+        float pi = std::numbers::pi_v<float>;
+
+        float y = std::clamp(-point.y, -1.0f, 1.0f);
+
+        float theta = std::acos(y);
+        float phi = std::atan2(-point.z, point.x) + pi;
+
+        float uTextureCoordinate = phi / (2*pi);
+        float vTextureCoordinate = theta / pi;
+
+        return std::array<float, 2>({ uTextureCoordinate, vTextureCoordinate });
+    }
 }
 
 Sphere::Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material)
-    : m_boundingBox(ComputeBoundingBox(center, radius)), m_center(center, glm::vec3(0, 0, 0)), m_radius(radius), m_material(std::move(material))
+    : m_boundingBox(ComputeBoundingBox(center, radius)), m_center(center, glm::vec3(0, 0, 0)), m_material(std::move(material)), m_radius(radius)
 {
 }
 
 Sphere::Sphere(glm::vec3 center1, glm::vec3 center2, float radius, std::shared_ptr<Material> material)
-    : m_boundingBox(ComputeBoundingBox(center1, center2, radius)), m_center(center1, center2 - center1), m_radius(radius), m_material(std::move(material))
+    : m_boundingBox(ComputeBoundingBox(center1, center2, radius)), m_center(center1, center2 - center1), m_material(std::move(material)), m_radius(radius)
 {
 }
 
@@ -67,7 +82,13 @@ std::optional<HitRecord> Sphere::Hit(const Nyra::Ray& ray, Interval interval) co
     record.material = m_material;
     record.t = root;
     record.hitPoint = ray.At(record.t);
-    record.SetFaceNormal(ray, (record.hitPoint - currentCenter) / m_radius);
+    glm::vec3 outwardNormal = (record.hitPoint - currentCenter) / m_radius;
+    record.SetFaceNormal(ray, outwardNormal);
+
+    std::array<float, 2> textureCoordinates = MapPointToTextureCoordinates(outwardNormal);
+    record.uTextureCoordinate = textureCoordinates[0];
+    record.vTextureCoordinate = textureCoordinates[1];
+
     return record;
 }
 

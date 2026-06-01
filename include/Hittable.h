@@ -14,6 +14,8 @@ namespace Nyra
         glm::vec3 surfaceNormal;
         std::shared_ptr<Material> material;
         float t;
+        float uTextureCoordinate;
+        float vTextureCoordinate;
         bool frontFace;
 
         // Sets the surface normal to always point against the ray direction (i.e. towards the ray origin)

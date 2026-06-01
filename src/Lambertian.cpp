@@ -3,11 +3,17 @@
 
 #include <Random.h>
 #include <Math.h>
+#include <SolidColor.h>
 
 using namespace Nyra;
 
 Lambertian::Lambertian(glm::vec3 albedo)
-    : Material(albedo)
+    : Material(albedo), m_texture(std::make_shared<SolidColor>(albedo))
+{
+}
+
+Lambertian::Lambertian(std::shared_ptr<Texture> texture)
+    : Material(glm::vec3(0, 0, 0)), m_texture(texture)
 {
 }
 
@@ -28,5 +34,7 @@ std::pair<glm::vec3, std::optional<Ray>> Lambertian::Scatter(const Ray& ray, con
         reflectedRay.SetDirection(hitRecord.surfaceNormal);
     }
 
-    return std::make_pair(m_albedo, reflectedRay);
+    glm::vec3 albedo = m_texture->GetColor(hitRecord.uTextureCoordinate, hitRecord.vTextureCoordinate, hitRecord.hitPoint);
+
+    return std::make_pair(albedo, reflectedRay);
 }

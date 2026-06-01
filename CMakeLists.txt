@@ -13,6 +13,7 @@ add_executable(NyraRayTracer ${SOURCES})
 target_include_directories(NyraRayTracer PRIVATE 
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/vendor/glm
+    ${CMAKE_SOURCE_DIR}/vendor/stb
 )
 
 target_compile_definitions(NyraRayTracer PRIVATE
@@ -51,5 +52,16 @@ target_precompile_headers(NyraRayTracer PRIVATE
     include/NyraPCH.h
 )
 
+# --- Pasting assets into executable directory to simplify file paths in code ---
+foreach(asset_dir assets/shaders assets/models assets/textures)
+    add_custom_command(
+        TARGET NyraRayTracer POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/${asset_dir}
+            $<TARGET_FILE_DIR:NyraRayTracer>/${asset_dir}
+    )
+endforeach()
+
+# --- Vendor libraries ---
 add_subdirectory(vendor/glm)
 target_link_libraries(NyraRayTracer PRIVATE glm::glm)

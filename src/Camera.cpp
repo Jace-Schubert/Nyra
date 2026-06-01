@@ -9,12 +9,12 @@ using namespace Nyra;
 
 Camera::Camera()
 {
-    m_samplesPerPixel = 200;
-    m_maxRayDepth = 20;
+    m_samplesPerPixel = 40;
+    m_maxRayDepth = 10;
 
     // Image
     constexpr float aspectRatio = 16.0 / 9.0;
-    m_imageWidth = 1200;
+    m_imageWidth = 400;
     m_imageHeight = int(m_imageWidth / aspectRatio);
 
     // Camera
