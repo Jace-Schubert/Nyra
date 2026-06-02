@@ -8,8 +8,9 @@
 using namespace Nyra;
 
 Camera::Camera()
+    : m_backgroundColor(glm::vec3(0.7f, 0.8f, 1.0f)) // Default background color is light blue gradient
 {
-    m_samplesPerPixel = 40;
+    m_samplesPerPixel = 50;
     m_maxRayDepth = 10;
 
     // Image
@@ -18,11 +19,11 @@ Camera::Camera()
     m_imageHeight = int(m_imageWidth / aspectRatio);
 
     // Camera
-    glm::vec3 lookFrom = glm::vec3(13, 2, 3);
-    glm::vec3 lookAt = glm::vec3(0, 0, 0);
+    glm::vec3 lookFrom = glm::vec3(26, 3, 6);
+    glm::vec3 lookAt = glm::vec3(0, 2, 0);
     glm::vec3 vup = glm::vec3(0, 1, 0);
 
-    m_defocusAngle = 0.6;
+    m_defocusAngle = 0.0f;
     float focusDistance = 10;
 
     constexpr float vfov = 20.0;
@@ -100,6 +101,10 @@ void Camera::render(const Nyra::HittableList& world) const
     std::clog << "Done!\n";
 }
 
+void Camera::SetBackgroundColor(glm::vec3 backgroundColor)
+{
+    m_backgroundColor = backgroundColor;
+}
 
 //===============//
 // Private Utils //
@@ -139,22 +144,22 @@ glm::vec3 Camera::CalculateRayColor(const Nyra::Ray& ray, uint32_t depth, const 
     {
         const Nyra::HitRecord& record = hitRecord.value();
 
+        glm::vec3 colorFromEmittedLight = record.material->GetEmittedLight(record.uTextureCoordinate, record.vTextureCoordinate, record.hitPoint);
+
         // Reflect ray in random direction from hit point so we can send it out later to see what it hits next (i.e. bounce ray around the scene).
         auto [attenuation, reflectedRay] = record.material->Scatter(ray, record);
 
         if (!reflectedRay.has_value())
         {
             // Ray was absorbed
-            return glm::vec3(0, 0, 0);
+            return colorFromEmittedLight;
         }
 
-        return attenuation * CalculateRayColor(reflectedRay.value(), depth - 1, world);
+        glm::vec3 colorFromScatteredRay = attenuation * CalculateRayColor(reflectedRay.value(), depth - 1, world);
+        return colorFromEmittedLight + colorFromScatteredRay;
     }
 
-    // Handle ray didnt hit anything - render background gradient
-    glm::vec3 unitDir = glm::normalize(ray.GetDirection());
-    float t = 0.5 * (unitDir.y + 1.0);
-    return ((1.0f - t) * glm::vec3(1.0, 1.0, 1.0)) + (t * glm::vec3(0.5, 0.7, 1.0));
+    return m_backgroundColor;
 }
 
 void Camera::CreatePPMFromBuffer(const std::vector<uint8_t>& buffer, const std::string& filename) const

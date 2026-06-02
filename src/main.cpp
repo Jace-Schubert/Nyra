@@ -12,6 +12,8 @@
 #include <SolidColor.h>
 #include <ImageTexture.h>
 #include <NoiseTexture.h>
+#include <Quad.h>
+#include <DiffuseLight.h>
 
 using namespace Nyra;
 
@@ -100,8 +102,38 @@ void RenderPerlinScene()
     std::shared_ptr<Lambertian> noiseMaterial = std::make_shared<Lambertian>(noiseTexture);
     world.Add(std::make_shared<Sphere>(glm::vec3(0, -1000, 0), 1000, noiseMaterial));
 
+    // Light
+    std::shared_ptr<SolidColor> lightColor = std::make_shared<SolidColor>(glm::vec3(4, 4, 4));
+    std::shared_ptr<DiffuseLight> lightMaterial = std::make_shared<DiffuseLight>(lightColor);
+    world.Add(std::make_shared<Quad>(glm::vec3(3, 1, -2), glm::vec3(2, 0, 0), glm::vec3(0, 2, 0), lightMaterial));
+
     // Sphere
-    world.Add(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0, noiseMaterial));
+    world.Add(std::make_shared<Sphere>(glm::vec3(0, 2, 0), 2.0, noiseMaterial));
+
+    // Build BVH for world
+    world = HittableList(std::make_shared<BVHNode>(world));
+
+    // Render
+    Camera cam;
+    cam.SetBackgroundColor(glm::vec3(0, 0, 0)); // Override default background color to pure black since we have a light in the scene and want to see the contrast
+    cam.render(world);
+}
+
+void RenderQuadsScene()
+{
+    HittableList world;
+
+    std::shared_ptr<Lambertian> redMaterial = std::make_shared<Lambertian>(glm::vec3(1, 0, 0));
+    std::shared_ptr<Lambertian> greenMaterial = std::make_shared<Lambertian>(glm::vec3(0, 1, 0));
+    std::shared_ptr<Lambertian> blueMaterial = std::make_shared<Lambertian>(glm::vec3(0, 0, 1));
+    std::shared_ptr<Lambertian> orangeMaterial = std::make_shared<Lambertian>(glm::vec3(1, 0.5, 0));
+    std::shared_ptr<Lambertian> tealMaterial = std::make_shared<Lambertian>(glm::vec3(0, 1, 1));
+
+    world.Add(std::make_shared<Quad>(glm::vec3(-3, -2, 5), glm::vec3(0, 0, -4), glm::vec3(0, 4, 0), redMaterial));
+    world.Add(std::make_shared<Quad>(glm::vec3(-2, -2, 0), glm::vec3(4, 0, 0), glm::vec3(0, 4, 0), greenMaterial));
+    world.Add(std::make_shared<Quad>(glm::vec3(3, -2, 1), glm::vec3(0, 0, 4), glm::vec3(0, 4, 0), blueMaterial));
+    world.Add(std::make_shared<Quad>(glm::vec3(-2, 3, 1), glm::vec3(4, 0, 0), glm::vec3(0, 0, 4), orangeMaterial));
+    world.Add(std::make_shared<Quad>(glm::vec3(-2, -3, 5), glm::vec3(4, 0, 0), glm::vec3(0, 0, -4), tealMaterial));
 
     // Build BVH for world
     world = HittableList(std::make_shared<BVHNode>(world));
@@ -123,6 +155,9 @@ int main(int argc, char *argv[])
             break;
         case 3:
             RenderPerlinScene();
+            break;
+        case 4:
+            RenderQuadsScene();
             break;
         default:
             break;

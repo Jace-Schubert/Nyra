@@ -16,6 +16,7 @@ namespace Nyra
         bool Surrounds(float value) const;
         float Clamp(float value) const;
         void Expand(float delta);
+        float GetRange() const;
 
         float GetMin() const;
         float GetMax() const;

@@ -13,6 +13,8 @@ namespace Nyra
 
         void render(const HittableList& world) const;
 
+        void SetBackgroundColor(glm::vec3 backgroundColor);
+
     private:
         Nyra::Ray GenerateRay(float i, float j) const;
         glm::vec3 GenerateDefocusDiskSample() const;
@@ -33,6 +35,7 @@ namespace Nyra
         glm::vec3 m_pixel00Loc;
         glm::vec3 m_defocusDiskU;
         glm::vec3 m_defocusDiskV;
+        glm::vec3 m_backgroundColor;
         float m_defocusAngle;
         uint32_t m_maxRayDepth;
         int m_samplesPerPixel;

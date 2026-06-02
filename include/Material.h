@@ -14,6 +14,11 @@ namespace Nyra
 
         virtual std::pair<glm::vec3, std::optional<Ray>> Scatter(const Ray& ray, const HitRecord& hitRecord) const = 0;
 
+        virtual glm::vec3 GetEmittedLight(float u, float v, glm::vec3 point) const
+        {
+            return glm::vec3(0, 0, 0);
+        }
+
     protected:
         Material(glm::vec3 albedo) : m_albedo(albedo) {}
 

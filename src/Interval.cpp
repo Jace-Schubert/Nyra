@@ -57,3 +57,8 @@ float Interval::GetMax() const
 {
     return m_max;
 }
+
+float Interval::GetRange() const
+{
+    return m_max - m_min;
+}

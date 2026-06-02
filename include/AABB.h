@@ -34,5 +34,8 @@ namespace Nyra
 
     private:
         std::array<Interval, 3> m_intervals;
+
+        // Pads near empty intervals to a minimum value to prevent issues during ray-intersection calculations 
+        void PadNearEmptyIntervals();
     };
 }

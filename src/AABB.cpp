@@ -6,6 +6,7 @@ using namespace Nyra;
 AABB::AABB(Interval xInterval, Interval yInterval, Interval zInterval)
     : m_intervals({xInterval, yInterval, zInterval})
 {
+    PadNearEmptyIntervals();
 }
 
 AABB::AABB(glm::vec3 point1, glm::vec3 point2)
@@ -13,6 +14,7 @@ AABB::AABB(glm::vec3 point1, glm::vec3 point2)
                    Interval(std::fmin(point1.y, point2.y), std::fmax(point1.y, point2.y)),
                    Interval(std::fmin(point1.z, point2.z), std::fmax(point1.z, point2.z))})
 {
+    PadNearEmptyIntervals();
 }
 
 AABB::AABB(const AABB& lhs, const AABB& rhs)
@@ -107,4 +109,19 @@ Interval AABB::operator[](int i) const
 Interval& AABB::operator[](int i)
 {
     return m_intervals[i];
+}
+
+//===============//
+// Private Utils //
+//===============//
+void AABB::PadNearEmptyIntervals()
+{
+    float min = 0.001f;
+    for (Interval& interval : m_intervals)
+    {
+        if (interval.GetRange() < min)
+        {
+            interval.Expand(min);
+        }
+    }
 }
