@@ -73,6 +73,15 @@ int AABB::ComputeLongestAxis() const
     }
 }
 
+void AABB::Offset(glm::vec3 offset)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        m_intervals[i].SetMin(m_intervals[i].GetMin() + offset[i]);
+        m_intervals[i].SetMax(m_intervals[i].GetMax() + offset[i]);
+    }
+}
+
 // Setters & Getters
 Interval AABB::GetXInterval() const
 {

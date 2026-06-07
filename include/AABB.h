@@ -19,6 +19,8 @@ namespace Nyra
 
         // returns the index of the longest axis of the bounding box (0 = x, 1 = y, 2 = z)
         int ComputeLongestAxis() const;
+        
+        void Offset(glm::vec3 offset);
 
         // Getters & Setters
         Interval GetXInterval() const;

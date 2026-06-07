@@ -1,5 +1,6 @@
 #include <NyraPCH.h>
 
+#include <Box.h>
 #include <BVHNode.h>
 #include <Camera.h>
 #include <Sphere.h>
@@ -14,6 +15,9 @@
 #include <NoiseTexture.h>
 #include <Quad.h>
 #include <DiffuseLight.h>
+#include <Translate.h>
+#include <RotateY.h>
+#include <ConstantMedium.h>
 
 using namespace Nyra;
 
@@ -143,9 +147,55 @@ void RenderQuadsScene()
     cam.render(world);
 }
 
+void RenderCornellBoxScene()
+{
+    std::shared_ptr<Lambertian> redMaterial = std::make_shared<Lambertian>(glm::vec3(0.65f, 0.05f, 0.05f));
+    std::shared_ptr<Lambertian> whiteMaterial = std::make_shared<Lambertian>(glm::vec3(0.73f, 0.73f, 0.73f));
+    std::shared_ptr<Lambertian> greenMaterial = std::make_shared<Lambertian>(glm::vec3(0.12f, 0.45f, 0.15f));
+
+    // Light
+    std::shared_ptr<SolidColor> lightColor = std::make_shared<SolidColor>(glm::vec3(15, 15, 15));
+    std::shared_ptr<DiffuseLight> lightMaterial = std::make_shared<DiffuseLight>(lightColor);
+
+    HittableList world;
+
+    world.Add(std::make_shared<Quad>(glm::vec3(555, 0, 0), glm::vec3(0, 555, 0), glm::vec3(0, 0, 555), greenMaterial)); // Left wall
+    world.Add(std::make_shared<Quad>(glm::vec3(0, 0, 0), glm::vec3(0, 555, 0), glm::vec3(0, 0, 555), redMaterial)); // Right wall
+    world.Add(std::make_shared<Quad>(glm::vec3(0, 0, 555), glm::vec3(555, 0, 0), glm::vec3(0, 555, 0), whiteMaterial)); // Back wall
+    world.Add(std::make_shared<Quad>(glm::vec3(0, 0, 0), glm::vec3(555, 0, 0), glm::vec3(0, 0, 555), whiteMaterial)); // Floor
+    world.Add(std::make_shared<Quad>(glm::vec3(555, 555, 555), glm::vec3(-555, 0, 0), glm::vec3(0, 0, -555), whiteMaterial)); // Ceiling
+    world.Add(std::make_shared<Quad>(glm::vec3(113, 554, 127), glm::vec3(330, 0, 0), glm::vec3(0, 0, 305), lightMaterial)); // Light
+
+    // Texture colors for fog
+    std::shared_ptr<SolidColor> black = std::make_shared<SolidColor>(glm::vec3(0.0f, 0.0f, 0.0f));
+    std::shared_ptr<SolidColor> white = std::make_shared<SolidColor>(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    // Boxes
+    std::shared_ptr<Hittable> leftBox = std::make_shared<Box>(glm::vec3(0, 0, 0), glm::vec3(165, 330, 165), whiteMaterial);
+    leftBox = std::make_shared<RotateY>(leftBox, 15.0f);
+    leftBox = std::make_shared<Translate>(leftBox, glm::vec3(265, 0, 295));
+    //leftBox = std::make_shared<ConstantMedium>(leftBox, 0.01f, black);
+
+    std::shared_ptr<Hittable> rightBox = std::make_shared<Box>(glm::vec3(0, 0, 0), glm::vec3(165, 165, 165), whiteMaterial);
+    rightBox = std::make_shared<RotateY>(rightBox, -18.0f);
+    rightBox = std::make_shared<Translate>(rightBox, glm::vec3(130, 0, 65));
+    //rightBox = std::make_shared<ConstantMedium>(rightBox, 0.01f, white);
+
+    world.Add(leftBox);
+    world.Add(rightBox);
+
+    // Build BVH for world
+    world = HittableList(std::make_shared<BVHNode>(world));
+
+    // Render
+    Camera cam;
+    cam.SetBackgroundColor(glm::vec3(0, 0, 0)); // Override default background color to pure black since we have a light in the scene and want to see the contrast
+    cam.render(world);
+}
+
 int main(int argc, char *argv[])
 {
-    switch(3)
+    switch(5)
     {
         case 1:
             RenderSpheresScene();
@@ -158,6 +208,9 @@ int main(int argc, char *argv[])
             break;
         case 4:
             RenderQuadsScene();
+            break;
+        case 5:
+            RenderCornellBoxScene();
             break;
         default:
             break;

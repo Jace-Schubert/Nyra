@@ -19,7 +19,9 @@ namespace Nyra
         float GetRange() const;
 
         float GetMin() const;
+        void SetMin(float min);
         float GetMax() const;
+        void SetMax(float max);
 
     private:
         float m_min;

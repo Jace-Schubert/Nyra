@@ -53,9 +53,19 @@ float Interval::GetMin() const
     return m_min;
 }
 
+void Interval::SetMin(float min)
+{
+    m_min = min;
+}
+
 float Interval::GetMax() const
 {
     return m_max;
+}
+
+void Interval::SetMax(float max)
+{
+    m_max = max;
 }
 
 float Interval::GetRange() const

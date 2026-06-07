@@ -10,23 +10,23 @@ using namespace Nyra;
 Camera::Camera()
     : m_backgroundColor(glm::vec3(0.7f, 0.8f, 1.0f)) // Default background color is light blue gradient
 {
-    m_samplesPerPixel = 50;
-    m_maxRayDepth = 10;
+    m_samplesPerPixel = 150;
+    m_maxRayDepth = 40;
 
     // Image
-    constexpr float aspectRatio = 16.0 / 9.0;
-    m_imageWidth = 400;
+    constexpr float aspectRatio = 1.0f;
+    m_imageWidth = 600;
     m_imageHeight = int(m_imageWidth / aspectRatio);
 
     // Camera
-    glm::vec3 lookFrom = glm::vec3(26, 3, 6);
-    glm::vec3 lookAt = glm::vec3(0, 2, 0);
+    glm::vec3 lookFrom = glm::vec3(278, 278, -800);
+    glm::vec3 lookAt = glm::vec3(278, 278, 0);
     glm::vec3 vup = glm::vec3(0, 1, 0);
 
     m_defocusAngle = 0.0f;
     float focusDistance = 10;
 
-    constexpr float vfov = 20.0;
+    constexpr float vfov = 40.0f;
     float viewportHeight = 2.0 * std::tan(glm::radians(vfov) / 2) * focusDistance;
     float viewportWidth = viewportHeight * ((float)m_imageWidth / m_imageHeight); 
     m_center = lookFrom;
@@ -139,7 +139,7 @@ glm::vec3 Camera::CalculateRayColor(const Nyra::Ray& ray, uint32_t depth, const 
         return glm::vec3(0, 0, 0);
     }
 
-    std::optional<Nyra::HitRecord> hitRecord = world.Hit(ray, Interval(0.001, std::numeric_limits<float>::infinity()));
+    std::optional<Nyra::HitRecord> hitRecord = world.Hit(ray, Interval(0.001, std::numeric_limits<float>::max()));
     if (hitRecord.has_value())
     {
         const Nyra::HitRecord& record = hitRecord.value();

@@ -1,4 +1,3 @@
-
 #include <NyraPCH.h>
 #include <Dielectric.h>
 
